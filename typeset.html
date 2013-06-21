@@ -1,1 +1,47 @@
-<!-- TypeSet Example -->
+<!DOCTYPE HTML>
+
+<!--
+[TypeSet]
+Description: A JQuery plug-in to automatically typeset your webpage. Script will favour the larger of either the users preference, or a calculation of ideal size based on viewing device dimensions.
+Version: 3
+JQuery: 1.9.1
+Author: Kevin Montgomery
+-->
+
+<head>
+<meta charset="utf-8">
+<title>TypeSet 3.0 Sample Page</title>
+<style> body { font-family:Arial, Helvetica, sans-serif; } </style>
+</head>
+
+<body>
+
+<h1>What is TypeSet?</h1>
+<p>TypeSet is a JQuery plug-in that automatically typesets your page for ideal font size, leading, and line length. It's intent is to set base body copy configuration that maximizes readibility.</p>
+
+<h2>How does it do that?</h2>
+<ol>
+<li>First: It determines your ideal font size using a calculation based on your screen resolution. It will assume you have situated your viewing device to fill approximately 30 degrees of your Field of View.</li>
+<li>From there, it determines with an ideal Field of View is for 1&ndash;4 characters, and set the font size accordingly.</li>
+<li>At the same time, it will also determine the default font size your device has set. If your font size is larger than the calculation TypeSet has determined, it will your your preference instead.</li>
+</ol>
+
+<p>From there, TypeSet will calculate ideal length and leading based on the base body copy size, and set that also.</p>
+
+<h2>How do I use it?</h2>
+
+<p>View the source of this page. Follow the example of including JQuery, and then selecting the elements you want to TypeSet. You can apply it to any element you want, but the idea is to use it on body copy elements such as "body", "p", "li" elements, and the like.</p>
+
+<!-- Include JQuery 1.9.1 -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+
+<!-- Initialize TypeSet -->
+<script src="js/jquery.typeset.js"></script>
+
+<script>
+$("body, p, li").typeset();
+</script>
+
+</body>
+</html>
