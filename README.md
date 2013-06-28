@@ -11,10 +11,13 @@ From there, it determines what an ideal Field of View is for 1&ndash;4 character
 
 At the same time, it will also determine the default font size your device has set. If your font size is larger than the calculation TypeSet has determined, it will your your preference instead.
 
+Once ideal font size is determined, ideal line length and height is then determined using font size as it's base.
+
+
 How do I use it?
 ================
 
-View the source of the included HTML page. Follow the example of including JQuery, and then selecting the elements you want to TypeSet. You can apply it to any element you want, but the idea is to use it on body copy elements such as "body", "p", "li" elements, and the like.
+View the source of the included HTML page. Follow the example of including JQuery, and then selecting the elements you want to TypeSet. You can apply it to any element you want, but the idea is to use it on body copy elements such as "body" and "p" elements.
 
 Example:
 $("body, p, .typeset").typeset();
