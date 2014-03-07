@@ -21,3 +21,8 @@ View the source of the included HTML page. Follow the example of including JQuer
 
 Example:
 $("body, p, .typeset").typeset();
+
+
+Changelog
+=========
+`Ver. 1.0` - Initial release
