@@ -5,6 +5,9 @@
 	* Version: 4.0
 	* By: Kevin Montgomery	
 	* 
+	* What's New?
+	+ Uses class properties instead of inline styles. Can be applied globally as a body class, or individual element classes.
+	*
 	* Steps:
 	+ Capture Screen Resolution
 	+ Decide the best value for a diameter
