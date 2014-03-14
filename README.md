@@ -1,7 +1,7 @@
-What is TypeSet?
+What is Typography?
 ================
 
-TypeSet is a JQuery plug-in that automatically typesets your page for ideal font size, leading, and line length. It's intent is to set base body copy configuration that maximizes readibility.
+Typography is a JavaScript object that automatically adjusts your page for ideal font size, leading, and line length. It's intent is to set base body copy configuration that maximizes readibility.
 
 How does it do that?
 ====================
@@ -17,12 +17,10 @@ Once ideal font size is determined, ideal line length and height is then determi
 How do I use it?
 ================
 
-View the source of the included HTML page. Follow the example of including JQuery, and then selecting the elements you want to TypeSet. You can apply it to any element you want, but the idea is to use it on body copy elements such as "body" and "p" elements.
-
-Example:
-$("body, p, .typeset").typeset();
+View the source of the included HTML page. You can apply it to any element you want by using the .typography class, or apply it to the body element to adjust the whole page.
 
 
 Changelog
 =========
-`Ver. 1.0` - Initial release
+`Ver. 3.0` - Initial release to GitHub
+`Ver. 4.0` - No longer requires JQuery. Added orphan control.
