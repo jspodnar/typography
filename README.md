@@ -23,4 +23,5 @@ View the source of the included HTML page. You can apply it to any element you w
 Changelog
 =========
 `Ver. 3.0` - Initial release to GitHub
+
 `Ver. 4.0` - No longer requires JQuery. Added orphan control.

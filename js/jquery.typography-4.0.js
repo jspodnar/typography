@@ -34,6 +34,7 @@ var typography_obj = new function() {
 		letter_diameter_pixels: "", // Math.round(typography_obj.parameters.fovial_vision_pixels / 4) // Diameter of 1 lowercase letter
 
 		font_height_ratio: "",
+		golden_ratio: 1.618
 
 	};
 
@@ -111,13 +112,15 @@ var typography_obj = new function() {
 	    typography_obj.outputs.font_height_pixels = Math.max(typography_obj.parameters.letter_diameter_pixels, typography_obj.user_configuration.font_height_pixels); // Apply the larger of the users setting, or the new setting.
 	    typography_obj.outputs.font_height_em = Math.round((typography_obj.outputs.font_height_pixels / typography_obj.user_configuration.font_height_pixels) * 1000) / 1000; // Calculate height using em measure.
 	    typography_obj.outputs.ex_height_diameter_pixels = Math.round(typography_obj.outputs.font_height_pixels / typography_obj.parameters.font_height_ratio);
-	    typography_obj.outputs.line_height_pixels = typography_obj.outputs.ex_height_diameter_pixels * 2;
-	    typography_obj.outputs.line_height_em = Math.round((typography_obj.outputs.line_height_pixels / typography_obj.outputs.font_height_pixels) * 1000) / 1000;
+	    
+	    typography_obj.outputs.line_height_pixels = Math.round(typography_obj.outputs.ex_height_diameter_pixels * (typography_obj.parameters.golden_ratio + (typography_obj.outputs.ex_height_diameter_pixels / typography_obj.outputs.font_height_pixels)));
+		typography_obj.outputs.line_height_em = Math.round((typography_obj.outputs.line_height_pixels / typography_obj.outputs.font_height_pixels) * 1000) / 1000;
+	    
 	    typography_obj.outputs.line_space_before_pixels =  typography_obj.outputs.ex_height_diameter_pixels;
 	    typography_obj.outputs.line_space_before_em = Math.round((typography_obj.outputs.line_space_before_pixels / typography_obj.outputs.font_height_pixels) * 1000) / 1000;
 	    typography_obj.outputs.line_space_after_pixels =  typography_obj.outputs.ex_height_diameter_pixels;
 	    typography_obj.outputs.line_space_after_em = Math.round((typography_obj.outputs.line_space_after_pixels / typography_obj.outputs.font_height_pixels) * 1000) / 1000;
-	    typography_obj.outputs.line_length_em = Math.max(39, (typography_obj.outputs.font_height_pixels * 2)); // Calculate ideal line length, compare the 'alphabet-and-a-half rule' to the 'points-times-two' rule
+	    typography_obj.outputs.line_length_em = Math.max(39, typography_obj.outputs.font_height_pixels * 2); // Calculate ideal line length, compare the 'alphabet-and-a-half rule' to the 'points-times-two' rule
 	    typography_obj.outputs.line_length_pixels = typography_obj.outputs.line_length_em * typography_obj.outputs.font_height_pixels;
 
 	    /*
@@ -125,14 +128,15 @@ var typography_obj = new function() {
 	     * Locate all elements with applicable "typography" class and adjust them.
 	     */
 
-	    typography_obj.orphan_control();
-		typography_obj.stylesheet();
+	    typography_obj.quotes_control();
+	    typography_obj.widow_control();
+		typography_obj.lines_control();
 
 	    console.log(typography_obj);
 
 	}
 
-	this.stylesheet = function() {
+	this.lines_control = function() {
 
 		var typography_css = document.createElement('style');
 		typography_css.setAttribute("type", "text/css");
@@ -141,16 +145,16 @@ var typography_obj = new function() {
 		"font-size: "+typography_obj.outputs.font_height_em+"em; "+
 		"} ";
 
-		var typography_margins = "body .typography, "+
-	     	"body.typography h1, "+
-	     	"body.typography h2, "+
-	     	"body.typography h3, "+
-	     	"body.typography h4, "+
-	     	"body.typography h5, "+
-	     	"body.typography h6, "+
-	     	"body.typography p, " +
-	     	"body.typography td, " +
-	     	"body.typography li " +
+		var typography_margins = "body .typography.lines, "+
+	     	"body.typography.lines h1, "+
+	     	"body.typography.lines h2, "+
+	     	"body.typography.lines h3, "+
+	     	"body.typography.lines h4, "+
+	     	"body.typography.lines h5, "+
+	     	"body.typography.lines h6, "+
+	     	"body.typography.lines p, " +
+	     	"body.typography.lines td, " +
+	     	"body.typography.lines li " +
 		"{ "+
 		"line-height: "+typography_obj.outputs.line_height_em+"em; "+
 		"max-width: "+typography_obj.outputs.line_length_em+"rem; "+
@@ -171,19 +175,19 @@ var typography_obj = new function() {
 
 	}
 
-	this.orphan_control = function() {
+	this.widow_control = function() {
 
 	    /* [Locate elements for typesetter] */
-	    var typesetter_elements = document.querySelectorAll("body .typography, "+
-	     	"body.typography h1, "+
-	     	"body.typography h2, "+
-	     	"body.typography h3, "+
-	     	"body.typography h4, "+
-	     	"body.typography h5, "+
-	     	"body.typography h6, "+
-	     	"body.typography p," +
-	     	"body.typography td," +
-	     	"body.typography li");
+	    var typesetter_elements = document.querySelectorAll("body .typography.orphans, "+
+	     	"body.typography.orphans h1, "+
+	     	"body.typography.orphans h2, "+
+	     	"body.typography.orphans h3, "+
+	     	"body.typography.orphans h4, "+
+	     	"body.typography.orphans h5, "+
+	     	"body.typography.orphans h6, "+
+	     	"body.typography.orphans p," +
+	     	"body.typography.orphans td," +
+	     	"body.typography.orphans li");
 
 	    var punctuation = new Array("!", ".", ",", "?", ":", ";");
 
@@ -220,7 +224,61 @@ var typography_obj = new function() {
 	    	var last_words =  word_array.splice(-2);
 	    	var last_words_join = last_words.join("&nbsp;");
 			word_array.push(last_words_join);
-			console.log(word_array);
+
+			line = word_array.join(" ");
+			typesetter_elements[i].innerHTML = line;
+
+		}
+
+	}
+
+	this.quotes_control = function() {
+
+	    /* [Locate elements for typesetter] */
+	    var typesetter_elements = document.querySelectorAll("body .typography.quotes, "+
+	     	"body.typography.quotes h1, "+
+	     	"body.typography.quotes h2, "+
+	     	"body.typography.quotes h3, "+
+	     	"body.typography.quotes h4, "+
+	     	"body.typography.quotes h5, "+
+	     	"body.typography.quotes h6, "+
+	     	"body.typography.quotes p," +
+	     	"body.typography.quotes td," +
+	     	"body.typography.quotes li");
+
+	    for (var i = 0; i < typesetter_elements.length; i++) {
+
+			/* [Apply orphan control] */
+	    	var line = typesetter_elements[i].innerHTML;
+	    	var word_array = line.split(" ");
+	    	var word_cound = word_array.length;
+	    	
+	    	for (var ii = 0; ii < word_array.length - 2; ii++) { // Look at each word for punctuation
+	    		
+	    		var word = word_array[ii];
+	    		var evaluate_open_quotes = word.substring(0,1);
+				var evaluate_close_quotes = word.substring(word.length - 1, word.length);
+				var evaluate_apostrophes = word.substring(1, word.length - 1);
+
+				/* [Apostrophes] */
+				if (evaluate_apostrophes.indexOf("'")) {
+					word = word.replace("'","&rsquo;");
+					word_array[ii] = word;
+				}
+
+				/* [Double Quotes] */
+				if (evaluate_open_quotes == '"' && evaluate_close_quotes == '"') {
+					word = "&ldquo;" + word.substring(1, word.length - 1) + "&rdquo;";
+					word_array[ii] = word;
+				}
+
+				/* [Single Quotes] */
+				else if (evaluate_open_quotes == "'" && evaluate_close_quotes == "'") {
+					word = "&lsquo;" + word.substring(1, word.length - 1) + "&rsquo;";
+					word_array[ii] = word;
+				}
+
+    		}
 
 			line = word_array.join(" ");
 			typesetter_elements[i].innerHTML = line;
