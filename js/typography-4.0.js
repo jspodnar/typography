@@ -2,21 +2,21 @@
   * [Typography]
   *
   * Description:
-  + A JavaScript object to automatically set the typography your webpage based on viewing device dimensions.
+  + A JavaScript object to automatically set the typography of your webpage based on viewing device dimensions.
   + Does 3 things: Sets ideal font size, sets ideal line lengths and leading, and applies orphan control.
   * Version: 4.0
   * By: Kevin Montgomery
 
   * 
   * What's New?
-  + Uses class properties instead of inline styles. Can be applied globally as a body class, or individual element classes.
+  + No longer requires JQuery. Added orphan control.
+  + Uses class properties instead of inline styles.
+  + Can be applied globally as a body class, or as individual element classes.
   *
   */
 
 var typography_obj = new function() {	
 	
-	/* [R2] */
-
 	/* [Parameters] */
 	this.parameters = {
 
@@ -26,8 +26,8 @@ var typography_obj = new function() {
 		/* [Fovial vision] */
 		fovial_vision: 1.5, // fovial vision, in degrees, for 4-5 letters. Usually 1-2 degrees.
 
-		/* [Field of view ratio] */
-		field_of_view_ratio: "", // Calculate ratio of fovial vision to field of view
+		/* [Placeholder for field of view ratio] */
+		field_of_view_ratio: "",
 
 		/* [Placeholder for diameter of 1 lowercase letter] */
 		fovial_vision_pixels: "",
@@ -110,7 +110,7 @@ var typography_obj = new function() {
 	     * Don't forget, we need to compare LOWERCASE letters, not the entire font height.
 	     **/
 	    typography_obj.parameters.font_height_ratio = Math.round((typography_obj.user_configuration.ex_height_pixels / typography_obj.user_configuration.font_height_pixels) * 1000) / 1000;
-	    typography_obj.parameters.field_of_view_ratio = typography_obj.parameters.fovial_vision / typography_obj.parameters.field_of_view;
+	    typography_obj.parameters.field_of_view_ratio = typography_obj.parameters.fovial_vision / typography_obj.parameters.field_of_view; // Calculate ratio of fovial vision to field of view
 	    typography_obj.parameters.fovial_vision_pixels = Math.round(typography_obj.user_configuration.screen_avg * typography_obj.parameters.field_of_view_ratio), // Fovial diameter in pixels, for 4 letters
 	    typography_obj.parameters.letter_diameter_pixels = Math.round((typography_obj.parameters.fovial_vision_pixels / 4.5) / typography_obj.parameters.font_height_ratio) // Diameter of 1 uppercase letter
 
@@ -119,10 +119,6 @@ var typography_obj = new function() {
 	    typography_obj.outputs.font_height_em = Math.round((typography_obj.outputs.font_height_pixels / typography_obj.user_configuration.font_height_pixels) * 1000) / 1000; // Calculate height using em measure.
 	    typography_obj.outputs.ex_height_diameter_pixels = Math.round(typography_obj.outputs.font_height_pixels * typography_obj.parameters.font_height_ratio);
 	    
-	    /**
-	     * Diagram exactly what I'm trying to do here...
-	     **/
-
 	    typography_obj.outputs.line_height_pixels = Math.round(typography_obj.outputs.font_height_pixels + typography_obj.outputs.ex_height_diameter_pixels);
 		typography_obj.outputs.line_height_em = Math.round((typography_obj.outputs.line_height_pixels / typography_obj.outputs.font_height_pixels) * 1000) / 1000;
 	    
@@ -141,8 +137,6 @@ var typography_obj = new function() {
 	    typography_obj.quotes_control();
 	    typography_obj.orphans_control();
 		typography_obj.lines_control();
-
-	    // console.log(typography_obj);
 
 	}
 
@@ -272,10 +266,7 @@ var typography_obj = new function() {
 	    		var has_punctuation = "";
 	    		var evaluate_punctuation = word.substring(word.length - 1, word.length);
 
-	    		/*
-	    		 * If punctuation is found...
-	    		 */
-	    		
+	    		/* [If punctuation is found] */
 	    		if (ii > 0 && punctuation.indexOf(evaluate_punctuation) > 0) {
 	    			var evaluate_close_quotes = word.substring(word.length - 2, word.length - 1);
 	    			has_punctuation = evaluate_punctuation;
@@ -304,7 +295,11 @@ var typography_obj = new function() {
 
 				/* [Single Quotes] */
 				else if (evaluate_open_quotes == "'" && evaluate_close_quotes == "'") {
-					word = "&lsquo;" + word.substring(1, word.length - 1) + "&rsquo;";
+					if (has_punctuation.length > 0) {
+						word = "&lsquo;" + word.substring(1, word.length - 2) + "&rsquo;" + has_punctuation;
+					} else {
+						word = "&lsquo;" + word.substring(1, word.length - 1) + "&rsquo;";
+					}
 					word_array[ii] = word;
 				}
 

@@ -23,6 +23,10 @@ Enjoy!
 
 Changelog
 =========
-`Ver. 3.0` - Initial release to GitHub
+`Ver. 3.0`
+- Initial release to GitHub
 
-`Ver. 4.0` - No longer requires JQuery. Added orphan control.
+`Ver. 4.0`
+- No longer requires JQuery. Added orphan control.
+- Uses class properties instead of inline styles.
+- Can be applied globally as a body class, or as individual element classes.
