@@ -11,7 +11,7 @@ Author: Kevin Montgomery
 <meta charset="utf-8">
 <title>Typography</title>
 <style>
-body { font-family: "Trebuchet MS", Helvetica, Arial, sans-serif; }
+body { font-family: Helvetica, Arial, sans-serif; }
 </style>
 
 <!-- [Initialize JQuery] -->
@@ -25,25 +25,23 @@ body { font-family: "Trebuchet MS", Helvetica, Arial, sans-serif; }
 <h1>Typography 4.0 Sample Page</h1>
 
 <h2>What is Typography (Script)?</h2>
-<p class="typography">Typography is a JavaScript object that automatically sets a page ideal font size, leading, and line length. It also applies some orphan control. It's intent is to set a base body copy configuration that maximizes readibility, that can be overwritten as required.</p>
+<p class="typography lines">Typography is a JavaScript object that automatically sets a page ideal font size, leading, and line length. It also applies some orphan control. It's intent is to set a base body copy configuration that maximizes readibility, that can be overwritten as required.</p>
 
 <h3>How does it do that?</h3>
 <ol>
 <li>First, it determines the best font size for your screen resolution.</li>
-<li>Then, it applies the ideal line length, leading, and paragraph spacing to your text elements based on the ideal font size.
-<li>Finally, it applies non-breaking spaces to words that shouldn't be broken up, such as immediately before and after punctuation, and before a sentence ends.
-
-
+<li>Then, it applies the ideal line length, leading, and paragraph spacing to your text elements based on the ideal font size.</li>
+<li>Finally, it applies non-breaking spaces to words that shouldn't be broken up, such as immediately before and after punctuation, and before a sentence ends.</li>
 </ol>
 
 <h3>How do I use it?</h3>
 
-<p>Apply the "typography" class to the body tag to apply the ideal font size to your page. "lines" and "orphans" classes can be added either to the body tag for universal application, or to individual copy tags (h1-h6, p, td, li).</p>
+<p>Apply the "typography" class to the body tag to apply the ideal font size to your page. "lines", "orphans", and "quotes" control classes can be added either to the body tag for universal application, to individual copy tags (h1-h6, p, td, li), or to any other element that you want to apply these controls to.</p>
 
 <p>Enjoy!</p>
 
 <!-- Initialize TypeSet -->
-<script src="js/jquery.typography-4.0.js"></script>
+<script src="js/typography-4.0.js"></script>
 
 <script>
 typography_obj.init();

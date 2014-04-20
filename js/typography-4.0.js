@@ -24,15 +24,16 @@ var typography_obj = new function() {
 		field_of_view: 30, // About 30 degree fov monitor viewing.
 
 		/* [Fovial vision] */
-		fovial_vision: 1.5, // fovial vision, in degrees, for 4 letters. Usually 1-2 degrees.
+		fovial_vision: 1.5, // fovial vision, in degrees, for 4-5 letters. Usually 1-2 degrees.
 
 		/* [Field of view ratio] */
-		field_of_view_ratio: "", // fovial_vision / field_of_view, // Calculate ratio of fovial vision to field of view
+		field_of_view_ratio: "", // Calculate ratio of fovial vision to field of view
 
-		/* [Determine diameter for 1 lowercase letter] */
-		fovial_vision_pixels: "", // Math.round(typography_obj.user_configuration.screen_avg * typography_obj.parameters.field_of_view_ratio), // Fovial diameter in pixels, for 4 letters
-		letter_diameter_pixels: "", // Math.round(typography_obj.parameters.fovial_vision_pixels / 4) // Diameter of 1 lowercase letter
+		/* [Placeholder for diameter of 1 lowercase letter] */
+		fovial_vision_pixels: "",
+		letter_diameter_pixels: "",
 
+		/* [Ratio placeholders] */
 		font_height_ratio: "",
 		golden_ratio: 1.618
 
@@ -44,8 +45,8 @@ var typography_obj = new function() {
 		/* [Capture screen resolution, use average for diameter] */
 		screen_width: screen.width,
 		screen_height: screen.height,
-		screen_avg: "", // (screen_width + screen_height) / 2
-		screen_min: "", // = Math.min(this.screen_width, this.screen_height);
+		screen_avg: "",
+		screen_min: "",
 
 		/* [Establish parameters for users font size] */
 		font_height_pixels: "",
@@ -56,6 +57,7 @@ var typography_obj = new function() {
 	/* [Outputs] */
 	this.outputs = {
 
+		/* [Values that will be used in the resulting CSS] */
 		font_height_pixels: "",
 		font_height_em: "",
 		ex_height_diameter_pixels: "",
@@ -73,21 +75,22 @@ var typography_obj = new function() {
 	/* [Initialize the object] */
 	this.init = function() {
 
-		/* [Evaluate users font size] */
+		/* [Create element to evaluate users font size] */
 		var user_font_height_obj = document.createElement("div");
 		user_font_height_obj.setAttribute("id", "usr_font_height_obj");
 		user_font_height_obj.setAttribute("style", "line-height: 100%, padding: 0, margin: 0");
 		user_font_height_obj.innerHTML = "&nbsp;";
 		document.getElementsByTagName("body")[0].insertBefore(user_font_height_obj, document.getElementsByTagName("body")[0].childNodes[0]);
 		
+		/* [Calculate users font size] */
 		typography_obj.user_configuration.font_height_pixels = Math.min(
 			Math.min(user_font_height_obj.scrollHeight, user_font_height_obj.scrollHeight),
 			Math.min(user_font_height_obj.offsetHeight, user_font_height_obj.offsetHeight),
 			Math.min(user_font_height_obj.clientHeight, user_font_height_obj.clientHeight)
 	    );
 	    
-	    user_font_height_obj.setAttribute("style", "font-size: 1ex;");
-	    
+	    /* [Reduce element font size to calculate 1ex] */
+	    user_font_height_obj.setAttribute("style", "font-size: 1ex;");  
 	    typography_obj.user_configuration.ex_height_pixels = Math.min(
 			Math.min(user_font_height_obj.scrollHeight, user_font_height_obj.scrollHeight),
 			Math.min(user_font_height_obj.offsetHeight, user_font_height_obj.offsetHeight),
@@ -101,19 +104,26 @@ var typography_obj = new function() {
 	    typography_obj.user_configuration.screen_avg = (typography_obj.user_configuration.screen_width + typography_obj.user_configuration.screen_height) / 2;
 		typography_obj.user_configuration.screen_min = Math.min(typography_obj.user_configuration.screen_width, typography_obj.user_configuration.screen_height);
 
-
 	    /* [Parameter calculations] */
-	    typography_obj.parameters.font_height_ratio = 1 + (typography_obj.user_configuration.ex_height_pixels / typography_obj.user_configuration.font_height_pixels);
-	    typography_obj.parameters.field_of_view_ratio = (typography_obj.parameters.fovial_vision / typography_obj.parameters.field_of_view);
+
+	    /**
+	     * Don't forget, we need to compare LOWERCASE letters, not the entire font height.
+	     **/
+	    typography_obj.parameters.font_height_ratio = Math.round((typography_obj.user_configuration.ex_height_pixels / typography_obj.user_configuration.font_height_pixels) * 1000) / 1000;
+	    typography_obj.parameters.field_of_view_ratio = typography_obj.parameters.fovial_vision / typography_obj.parameters.field_of_view;
 	    typography_obj.parameters.fovial_vision_pixels = Math.round(typography_obj.user_configuration.screen_avg * typography_obj.parameters.field_of_view_ratio), // Fovial diameter in pixels, for 4 letters
-	    typography_obj.parameters.letter_diameter_pixels = Math.round(typography_obj.parameters.fovial_vision_pixels / 4) // Diameter of 1 lowercase letter
+	    typography_obj.parameters.letter_diameter_pixels = Math.round((typography_obj.parameters.fovial_vision_pixels / 4.5) / typography_obj.parameters.font_height_ratio) // Diameter of 1 uppercase letter
 
 	    /* [Outputs calculations] */
 	    typography_obj.outputs.font_height_pixels = Math.max(typography_obj.parameters.letter_diameter_pixels, typography_obj.user_configuration.font_height_pixels); // Apply the larger of the users setting, or the new setting.
 	    typography_obj.outputs.font_height_em = Math.round((typography_obj.outputs.font_height_pixels / typography_obj.user_configuration.font_height_pixels) * 1000) / 1000; // Calculate height using em measure.
-	    typography_obj.outputs.ex_height_diameter_pixels = Math.round(typography_obj.outputs.font_height_pixels / typography_obj.parameters.font_height_ratio);
+	    typography_obj.outputs.ex_height_diameter_pixels = Math.round(typography_obj.outputs.font_height_pixels * typography_obj.parameters.font_height_ratio);
 	    
-	    typography_obj.outputs.line_height_pixels = Math.round(typography_obj.outputs.ex_height_diameter_pixels * (typography_obj.parameters.golden_ratio + (typography_obj.outputs.ex_height_diameter_pixels / typography_obj.outputs.font_height_pixels)));
+	    /**
+	     * Diagram exactly what I'm trying to do here...
+	     **/
+
+	    typography_obj.outputs.line_height_pixels = Math.round(typography_obj.outputs.font_height_pixels + typography_obj.outputs.ex_height_diameter_pixels);
 		typography_obj.outputs.line_height_em = Math.round((typography_obj.outputs.line_height_pixels / typography_obj.outputs.font_height_pixels) * 1000) / 1000;
 	    
 	    typography_obj.outputs.line_space_before_pixels =  typography_obj.outputs.ex_height_diameter_pixels;
@@ -129,10 +139,10 @@ var typography_obj = new function() {
 	     */
 
 	    typography_obj.quotes_control();
-	    typography_obj.widow_control();
+	    typography_obj.orphans_control();
 		typography_obj.lines_control();
 
-	    console.log(typography_obj);
+	    // console.log(typography_obj);
 
 	}
 
@@ -175,7 +185,7 @@ var typography_obj = new function() {
 
 	}
 
-	this.widow_control = function() {
+	this.orphans_control = function() {
 
 	    /* [Locate elements for typesetter] */
 	    var typesetter_elements = document.querySelectorAll("body .typography.orphans, "+
@@ -246,6 +256,8 @@ var typography_obj = new function() {
 	     	"body.typography.quotes td," +
 	     	"body.typography.quotes li");
 
+	    var punctuation = new Array("!", ".", ",", "?", ":", ";"); // Need to scan for quotes placed before punctuation
+
 	    for (var i = 0; i < typesetter_elements.length; i++) {
 
 			/* [Apply orphan control] */
@@ -256,8 +268,22 @@ var typography_obj = new function() {
 	    	for (var ii = 0; ii < word_array.length - 2; ii++) { // Look at each word for punctuation
 	    		
 	    		var word = word_array[ii];
+
+	    		var has_punctuation = "";
+	    		var evaluate_punctuation = word.substring(word.length - 1, word.length);
+
+	    		/*
+	    		 * If punctuation is found...
+	    		 */
+	    		
+	    		if (ii > 0 && punctuation.indexOf(evaluate_punctuation) > 0) {
+	    			var evaluate_close_quotes = word.substring(word.length - 2, word.length - 1);
+	    			has_punctuation = evaluate_punctuation;
+	    		} else {
+	    			var evaluate_close_quotes = word.substring(word.length - 1, word.length);
+	    		}
+
 	    		var evaluate_open_quotes = word.substring(0,1);
-				var evaluate_close_quotes = word.substring(word.length - 1, word.length);
 				var evaluate_apostrophes = word.substring(1, word.length - 1);
 
 				/* [Apostrophes] */
@@ -268,7 +294,11 @@ var typography_obj = new function() {
 
 				/* [Double Quotes] */
 				if (evaluate_open_quotes == '"' && evaluate_close_quotes == '"') {
-					word = "&ldquo;" + word.substring(1, word.length - 1) + "&rdquo;";
+					if (has_punctuation.length > 0) {
+						word = "&ldquo;" + word.substring(1, word.length - 2) + "&rdquo;" + has_punctuation;
+					} else {
+						word = "&ldquo;" + word.substring(1, word.length - 1) + "&rdquo;";
+					}
 					word_array[ii] = word;
 				}
 
