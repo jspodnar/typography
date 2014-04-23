@@ -52,7 +52,7 @@ var typography_obj = new function() {
 		font_height_pixels: "",
 		ex_height_pixels: ""
 
-	}
+	};
 
 	/* [Outputs] */
 	this.outputs = {
@@ -111,8 +111,8 @@ var typography_obj = new function() {
 	     **/
 	    typography_obj.parameters.font_height_ratio = Math.round((typography_obj.user_configuration.ex_height_pixels / typography_obj.user_configuration.font_height_pixels) * 1000) / 1000;
 	    typography_obj.parameters.field_of_view_ratio = typography_obj.parameters.fovial_vision / typography_obj.parameters.field_of_view; // Calculate ratio of fovial vision to field of view
-	    typography_obj.parameters.fovial_vision_pixels = Math.round(typography_obj.user_configuration.screen_avg * typography_obj.parameters.field_of_view_ratio), // Fovial diameter in pixels, for 4 letters
-	    typography_obj.parameters.letter_diameter_pixels = Math.round((typography_obj.parameters.fovial_vision_pixels / 4.5) / typography_obj.parameters.font_height_ratio) // Diameter of 1 uppercase letter
+	    typography_obj.parameters.fovial_vision_pixels = Math.round(typography_obj.user_configuration.screen_avg * typography_obj.parameters.field_of_view_ratio); // Fovial diameter in pixels, for 4 letters
+	    typography_obj.parameters.letter_diameter_pixels = Math.round((typography_obj.parameters.fovial_vision_pixels / 4.5) / typography_obj.parameters.font_height_ratio); // Diameter of 1 uppercase letter
 
 	    /* [Outputs calculations] */
 	    typography_obj.outputs.font_height_pixels = Math.max(typography_obj.parameters.letter_diameter_pixels, typography_obj.user_configuration.font_height_pixels); // Apply the larger of the users setting, or the new setting.
@@ -138,27 +138,27 @@ var typography_obj = new function() {
 	    typography_obj.orphans_control();
 		typography_obj.lines_control();
 
-	}
+	};
 
 	this.lines_control = function() {
 
 		var typography_css = document.createElement('style');
 		typography_css.setAttribute("type", "text/css");
 
-		var typography_body_size = "body.typography { "+
+		var typography_body_size = "html.typography { "+
 		"font-size: "+typography_obj.outputs.font_height_em+"em; "+
 		"} ";
 
-		var typography_margins = "body .typography.lines, "+
-	     	"body.typography.lines h1, "+
-	     	"body.typography.lines h2, "+
-	     	"body.typography.lines h3, "+
-	     	"body.typography.lines h4, "+
-	     	"body.typography.lines h5, "+
-	     	"body.typography.lines h6, "+
-	     	"body.typography.lines p, " +
-	     	"body.typography.lines td, " +
-	     	"body.typography.lines li " +
+		var typography_margins = "html .typography.lines, "+
+	     	"html.typography.lines h1, "+
+	     	"html.typography.lines h2, "+
+	     	"html.typography.lines h3, "+
+	     	"html.typography.lines h4, "+
+	     	"html.typography.lines h5, "+
+	     	"html.typography.lines h6, "+
+	     	"html.typography.lines p, " +
+	     	"html.typography.lines td, " +
+	     	"html.typography.lines li " +
 		"{ "+
 		"line-height: "+typography_obj.outputs.line_height_em+"em; "+
 		"max-width: "+typography_obj.outputs.line_length_em+"rem; "+
@@ -177,21 +177,21 @@ var typography_obj = new function() {
 
 		document.getElementsByTagName("head")[0].appendChild(typography_css);
 
-	}
+	};
 
 	this.orphans_control = function() {
 
 	    /* [Locate elements for typesetter] */
-	    var typesetter_elements = document.querySelectorAll("body .typography.orphans, "+
-	     	"body.typography.orphans h1, "+
-	     	"body.typography.orphans h2, "+
-	     	"body.typography.orphans h3, "+
-	     	"body.typography.orphans h4, "+
-	     	"body.typography.orphans h5, "+
-	     	"body.typography.orphans h6, "+
-	     	"body.typography.orphans p," +
-	     	"body.typography.orphans td," +
-	     	"body.typography.orphans li");
+	    var typesetter_elements = document.querySelectorAll("html .typography.orphans, "+
+	     	"html.typography.orphans h1, "+
+	     	"html.typography.orphans h2, "+
+	     	"html.typography.orphans h3, "+
+	     	"html.typography.orphans h4, "+
+	     	"html.typography.orphans h5, "+
+	     	"html.typography.orphans h6, "+
+	     	"html.typography.orphans p," +
+	     	"html.typography.orphans td," +
+	     	"html.typography.orphans li");
 
 	    var punctuation = new Array("!", ".", ",", "?", ":", ";");
 
@@ -234,21 +234,21 @@ var typography_obj = new function() {
 
 		}
 
-	}
+	};
 
 	this.quotes_control = function() {
 
 	    /* [Locate elements for typesetter] */
-	    var typesetter_elements = document.querySelectorAll("body .typography.quotes, "+
-	     	"body.typography.quotes h1, "+
-	     	"body.typography.quotes h2, "+
-	     	"body.typography.quotes h3, "+
-	     	"body.typography.quotes h4, "+
-	     	"body.typography.quotes h5, "+
-	     	"body.typography.quotes h6, "+
-	     	"body.typography.quotes p," +
-	     	"body.typography.quotes td," +
-	     	"body.typography.quotes li");
+	    var typesetter_elements = document.querySelectorAll("html .typography.quotes, "+
+	     	"html.typography.quotes h1, "+
+	     	"html.typography.quotes h2, "+
+	     	"html.typography.quotes h3, "+
+	     	"html.typography.quotes h4, "+
+	     	"html.typography.quotes h5, "+
+	     	"html.typography.quotes h6, "+
+	     	"html.typography.quotes p," +
+	     	"html.typography.quotes td," +
+	     	"html.typography.quotes li");
 
 	    var punctuation = new Array("!", ".", ",", "?", ":", ";"); // Need to scan for quotes placed before punctuation
 
@@ -310,6 +310,6 @@ var typography_obj = new function() {
 
 		}
 
-	}
+	};
 
 };
