@@ -5,11 +5,9 @@ Typography is a JavaScript object that automatically sets a page ideal font size
 
 How does it do that?
 ====================
-First, it determines the best font size for your screen resolution.
+It determines the best font size for your screen resolution. From there, it calculates the ideal line length, leading, and paragraph spacing to your text elements based on the ideal font size. Each calculation is applied by appending an appropriate class to the element you want to apply to.
 
-Then, it applies the ideal line length, leading, and paragraph spacing to your text elements based on the ideal font size.
-
-Finally, it applies some orphan control by setting non-breaking spaces to words that shouldn’t be broken up, such as immediately before and after punctuation, and before a sentence ends
+Optionally, the object applies orphan control by setting non-breaking spaces to words that shouldn’t be broken up, such as immediately before and after punctuation, and before a sentence ends.
 
 
 How do I use it?
@@ -30,3 +28,6 @@ Changelog
 - No longer requires JQuery. Added orphan control.
 - Uses class properties instead of inline styles.
 - Can be applied globally as a body class, or as individual element classes.
+
+`Ver. 4.1`
+- Added "smart quotes" control.

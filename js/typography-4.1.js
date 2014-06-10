@@ -111,8 +111,8 @@ var typography_obj = new function() {
 	     **/
 	    typography_obj.parameters.font_height_ratio = Math.round((typography_obj.user_configuration.ex_height_pixels / typography_obj.user_configuration.font_height_pixels) * 1000) / 1000;
 	    typography_obj.parameters.field_of_view_ratio = typography_obj.parameters.fovial_vision / typography_obj.parameters.field_of_view; // Calculate ratio of fovial vision to field of view
-	    typography_obj.parameters.fovial_vision_pixels = Math.round(typography_obj.user_configuration.screen_avg * typography_obj.parameters.field_of_view_ratio); // Fovial diameter in pixels, for 4 letters
-	    typography_obj.parameters.letter_diameter_pixels = Math.round((typography_obj.parameters.fovial_vision_pixels / 4.5) / typography_obj.parameters.font_height_ratio); // Diameter of 1 uppercase letter
+	    typography_obj.parameters.fovial_vision_pixels = Math.round(typography_obj.user_configuration.screen_avg * typography_obj.parameters.field_of_view_ratio); // Fovial diameter in pixels, for 4-5 letters
+	    typography_obj.parameters.letter_diameter_pixels = Math.round((typography_obj.parameters.fovial_vision_pixels / 4.5) / typography_obj.parameters.font_height_ratio); // Diameter of approximately 1 uppercase letter
 
 	    /* [Outputs calculations] */
 	    typography_obj.outputs.font_height_pixels = Math.max(typography_obj.parameters.letter_diameter_pixels, typography_obj.user_configuration.font_height_pixels); // Apply the larger of the users setting, or the new setting.
