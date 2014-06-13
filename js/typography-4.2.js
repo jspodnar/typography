@@ -4,14 +4,12 @@
   * Description:
   + A JavaScript object to automatically set the typography of your webpage based on viewing device dimensions.
   + Does 3 things: Sets ideal font size, sets ideal line lengths and leading, and applies orphan control.
-  * Version: 4.0
+  * Version: 4.2
   * By: Kevin Montgomery
 
   * 
   * What's New?
-  + No longer requires JQuery. Added orphan control.
-  + Uses class properties instead of inline styles.
-  + Can be applied globally as a body class, or as individual element classes.
+  + Fixed an issue where "smart quotes" would only work on single words, not a group of words.
   *
   */
 
@@ -21,7 +19,7 @@ var typography_obj = new function() {
 	this.parameters = {
 
 		/* [Field of view] */
-		field_of_view: 30, // About 30 degree fov monitor viewing.
+		field_of_view: 33, // About 30-35 degree fov monitor viewing.
 
 		/* [Fovial vision] */
 		fovial_vision: 1.5, // fovial vision, in degrees, for 4-5 letters. Usually 1-2 degrees.
@@ -258,6 +256,8 @@ var typography_obj = new function() {
 	    	var line = typesetter_elements[i].innerHTML;
 	    	var word_array = line.split(" ");
 	    	var word_cound = word_array.length;
+	    	var open_double_quote = false;
+    		var open_single_quote = false;
 	    	
 	    	for (var ii = 0; ii < word_array.length - 2; ii++) { // Look at each word for punctuation
 	    		
@@ -265,41 +265,56 @@ var typography_obj = new function() {
 
 	    		var has_punctuation = "";
 	    		var evaluate_punctuation = word.substring(word.length - 1, word.length);
+	    		var evaluate_open_quotes = word.substring(0,1);
 
-	    		/* [If punctuation is found] */
+				// The process of evaluating opening and closing quotes needs to be re-evaluated.
+
+				/* [If punctuation is found] */
 	    		if (ii > 0 && punctuation.indexOf(evaluate_punctuation) > 0) {
 	    			var evaluate_close_quotes = word.substring(word.length - 2, word.length - 1);
 	    			has_punctuation = evaluate_punctuation;
 	    		} else {
 	    			var evaluate_close_quotes = word.substring(word.length - 1, word.length);
 	    		}
-
-	    		var evaluate_open_quotes = word.substring(0,1);
-				var evaluate_apostrophes = word.substring(1, word.length - 1);
-
-				/* [Apostrophes] */
-				if (evaluate_apostrophes.indexOf("'")) {
-					word = word.replace("'","&rsquo;");
-					word_array[ii] = word;
-				}
-
+	    		
 				/* [Double Quotes] */
-				if (evaluate_open_quotes == '"' && evaluate_close_quotes == '"') {
+				if (evaluate_open_quotes == '"') { 
+	    			open_double_quote = true;
+	    			word = "&ldquo;" + word.substring(1, word.length);
+	    			word_array[ii] = word;
+	    		}
+
+				if (evaluate_close_quotes == '"' && open_double_quote == true) {
 					if (has_punctuation.length > 0) {
-						word = "&ldquo;" + word.substring(1, word.length - 2) + "&rdquo;" + has_punctuation;
+						word = word.substring(0, word.length - 2) + "&rdquo;" + has_punctuation;
 					} else {
-						word = "&ldquo;" + word.substring(1, word.length - 1) + "&rdquo;";
+						word = word.substring(0, word.length - 1) + "&rdquo;";
 					}
 					word_array[ii] = word;
+					open_double_quote = false;
 				}
 
 				/* [Single Quotes] */
-				else if (evaluate_open_quotes == "'" && evaluate_close_quotes == "'") {
+				if (evaluate_open_quotes == "'") { 
+	    			open_single_quote = true;
+	    			word = "&lsquo;" + word.substring(1, word.length);
+	    			word_array[ii] = word;
+	    		}
+				
+				if (evaluate_close_quotes == "'" && open_single_quote == true) {
 					if (has_punctuation.length > 0) {
-						word = "&lsquo;" + word.substring(1, word.length - 2) + "&rsquo;" + has_punctuation;
+						word = word.substring(0, word.length - 2) + "&rsquo;" + has_punctuation;
 					} else {
-						word = "&lsquo;" + word.substring(1, word.length - 1) + "&rsquo;";
+						word = word.substring(0, word.length - 1) + "&rsquo;";
 					}
+					word_array[ii] = word;
+					open_single_quote = false;
+				}
+
+				/* [Apostrophes] */
+				var evaluate_apostrophes = word.substring(1, word.length - 1);
+				if (evaluate_apostrophes.indexOf("'")) {
+					word = word.replace("'","&rsquo;");
 					word_array[ii] = word;
 				}
 
