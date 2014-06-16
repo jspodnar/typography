@@ -27,9 +27,12 @@ var typography_obj = new function() {
 		/* [Placeholder for field of view ratio] */
 		field_of_view_ratio: "",
 
-		/* [Placeholder for diameter of 1 lowercase letter] */
+		/* [Placeholder for diameter of 1 lowercase letter, and minimum values] */
 		fovial_vision_pixels: "",
 		letter_diameter_pixels: "",
+		min_fovial_vision_inches: 0.416,
+		min_fovial_vision_pixels: "",
+		min_letter_vision_pixels: "",
 
 		/* [Ratio placeholders] */
 		font_height_ratio: "",
@@ -45,6 +48,7 @@ var typography_obj = new function() {
 		screen_height: screen.height,
 		screen_avg: "",
 		screen_min: "",
+		screen_resolution: "",
 
 		/* [Establish parameters for users font size] */
 		font_height_pixels: "",
@@ -75,10 +79,17 @@ var typography_obj = new function() {
 
 		/* [Create element to evaluate users font size] */
 		var user_font_height_obj = document.createElement("div");
-		user_font_height_obj.setAttribute("id", "usr_font_height_obj");
+		user_font_height_obj.setAttribute("id", "user_font_height_obj");
 		user_font_height_obj.setAttribute("style", "line-height: 100%, padding: 0, margin: 0");
 		user_font_height_obj.innerHTML = "&nbsp;";
 		document.getElementsByTagName("body")[0].insertBefore(user_font_height_obj, document.getElementsByTagName("body")[0].childNodes[0]);
+
+		/* [Create element to evaluate users screen resolution] */
+		var user_screen_resolution_obj = document.createElement("div");
+		user_screen_resolution_obj.setAttribute("id", "user_screen_resolution_obj");
+		user_screen_resolution_obj.setAttribute("style", "width: 1in;");
+		user_screen_resolution_obj.innerHTML = "&nbsp;";
+		document.getElementsByTagName("body")[0].insertBefore(user_screen_resolution_obj, document.getElementsByTagName("body")[0].childNodes[0]);
 		
 		/* [Calculate users font size] */
 		typography_obj.user_configuration.font_height_pixels = Math.min(
@@ -94,9 +105,17 @@ var typography_obj = new function() {
 			Math.min(user_font_height_obj.offsetHeight, user_font_height_obj.offsetHeight),
 			Math.min(user_font_height_obj.clientHeight, user_font_height_obj.clientHeight)
 	    );
+
+	    /* [Calculate users screen resolution] */
+		typography_obj.user_configuration.screen_resolution = Math.min(
+			Math.min(user_screen_resolution_obj.scrollWidth, user_screen_resolution_obj.scrollWidth),
+			Math.min(user_screen_resolution_obj.offsetWidth, user_screen_resolution_obj.offsetWidth),
+			Math.min(user_screen_resolution_obj.clientWidth, user_screen_resolution_obj.clientWidth)
+	    );
 	    
-	    /* [Remove font testing object] */
+	    /* [Remove testing objects] */
 	    document.getElementsByTagName("body")[0].removeChild(user_font_height_obj);
+	    document.getElementsByTagName("body")[0].removeChild(user_screen_resolution_obj);
 
 	    /* [User configuration calculations] */
 	    typography_obj.user_configuration.screen_avg = (typography_obj.user_configuration.screen_width + typography_obj.user_configuration.screen_height) / 2;
