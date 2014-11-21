@@ -10,6 +10,7 @@
   * What's New?
   + - "Cottage Getaway" version.
   + - Added "small", "medium", and "large" settings for recommended smallest, average, and largest font sizes.
+  + - Includes ideal device reading values, based on holding a printed item.
   */
 
 var typography_obj = new function() {	
